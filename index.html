@@ -1,0 +1,477 @@
+<!--
+Work in progress for a talk for the AWI study circle of climate dynamics
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Large Lanugage Models</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="./css/styles.css">  <!-- Changed path to local styles.css -->
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+
+      <!-- nutshell + options  -->
+      <script src="https://cdn.jsdelivr.net/gh/ncase/nutshell@1.0.7/nutshell.js"></script> 
+      <script>
+      Nutshell.setOptions({
+          dontEmbedHeadings: true, // If 'true', removes the "embed this as a nutshell" option on headings
+      });
+      </script>
+      <style>
+        /* Override Nutshell's default font-size */
+        .nutshell-bubble,
+        .nutshell-content {
+          font-size: 8px !important;
+        }
+      </style>
+
+      <!-- MathJax + options  -->
+      <script>
+      window.MathJax = {
+        loader: {
+          load: ['[tex]/textmacros']
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+          packages: {'[+]': ['textmacros']}
+        },
+        svg: {
+          fontCache: 'global'
+        },
+      };
+      </script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
+
+  </head>
+  <body>
+    <textarea id="source">
+
+    class: title-slide
+    <!-- Changed from "class: center, middle" to "class: title-slide" -->
+
+    <!-- PRESENTATION TITLE -->
+    #Building LLM-Powered Chatbots
+      Boris Shapkin 
+
+    ---
+    # Large Language Models (LLMs)
+
+    <b>Large Language Models (LLMs)</b> use vast datasets and deep learning techniques to understand and generate human-like text. They employ neural networks to process and predict language patterns.
+
+    <div style="display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 40px; margin-bottom: 20px;">
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <img src="./pictures/image.jpeg" alt="Model" style="height: 220px;">
+        <div style="margin-top: 12px; font-size: 0.9em; text-align: center;">chunk of the internet,<br>~10 Tb of text</div>
+      </div>
+      <div style="display: flex; align-items: center;">
+        <span style="font-size: 3em;">&#8594;</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <img src="./pictures/gpus.jpeg" alt="GPUs" style="height: 220px;">
+        <div style="margin-top: 12px; font-size: 0.9em; text-align: center;">6,000 GPUs for 12 days,<br>~$2M ~1e24 FLOPS</div>
+      </div>
+      <div style="display: flex; align-items: center;">
+        <span style="font-size: 3em;">&#8594;</span>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <img src="./pictures/zip.png" alt="Zip" style="height: 220px;">
+        <div style="margin-top: 12px; font-size: 0.9em; text-align: center;">~140GB file</div>
+      </div>
+    </div>
+    
+    <div style="font-size: 0.5em; margin-top: 64px; margin-bottom: 8px;">
+      *numbers for Llama 2 70B<br>
+      credits <a href="https://karpathy.ai">A. Karpaty</a>
+    </div>
+
+    ---
+
+    # How do they work?
+    <div style="display: flex; flex-direction: row; align-items: flex-start; gap: 30px; margin-top: 40px;">
+      <div style="flex-shrink: 0;">
+        <img src="./pictures/3blue1brown.jpg" alt="3Blue1Brown" style="height: 550px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.3);">
+      </div>
+      <!-- <div style="flex: 1; min-width: 450px; font-size: 0.85em;">
+    <div style="display: flex; flex-direction: row; align-items: flex-start; gap: 12px; margin-top: 24px;">
+      <div style="flex-shrink: 0;">
+        <img src="./pictures/3blue1brown.jpg" alt="3Blue1Brown" style="height: 260px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.3);">
+      </div> -->
+      <div style="flex: 1; min-width: 380px; font-size: 0.75em;">
+        <b>Stage 1: Pretraining</b><br>
+        <ul style="margin-top: 3px;">
+          <li>Acquire Data: ~10TB of diverse text.</li>
+          <li>Provision Hardware: ~6,000 GPUs.</li>
+          <li>Model Compression</li>
+          <li>Result: Obtain the base model.</li>
+        </ul>
+        <b>Stage 2: Finetuning</b><br>
+        <ul style="margin-top: 3px;">
+          <li>Labeling & Data: Define guidelines; gather ~100K Q&A samples or comparisons (e.g., via scale.ai).</li>
+          <li>Refinement: Finetune the base model (~1 day) to form the assistant model.</li>
+          <li>Validation & Deployment: Thoroughly evaluate; move to production.</li>
+          <li>Monitor & Iterate: Track misbehaviors, gather data, and repeat as needed.</li>
+        </ul>
+      </div>
+    </div>
+
+    ---
+
+    # Retrieval-augmented generation (RAG)
+
+    <div style="display: flex; flex-direction: row; align-items: flex-start; gap: 30px; margin-top: 40px; margin-left: 50px;" >
+      <div style="flex-shrink: 0;">
+        <img src="./pictures/rag.png" alt="RAG" style="height: 460px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.3);">
+      </div>
+      <div style="flex: 1; min-width: 460px; font-size: 1em;">
+      <!-- <div style="flex: 1; min-width: 320px; font-size: 0.85em;"> -->
+        <ul style="margin-top: 15px;">
+          <li style="margin-bottom: 50px;">Takes user’s request.</li>
+          <li style="margin-bottom: 50px;">Retrieves information from external sources.</li>
+          <li style="margin-bottom: 50px;">Augments user’s question with additional information.</li>
+          <li style="margin-bottom: 0;">Sends information to LLM (as a very long prompt).</li>
+        </ul>
+      </div>
+    </div>
+
+    ---
+    # Open Source vs. Paid LLMs
+
+    <div style="display: flex; justify-content: center; margin-top: 10px;">
+      <img
+        src="./pictures/aaii.png"
+        alt="Open Source vs Paid LLMs"
+        style="
+          width: 95%;
+          max-width: 850px;
+          height: auto;
+          border-radius: 12px;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        "
+      />
+    </div>
+    ---
+    # Open Source vs. Paid LLMs
+    <div style="display: flex; justify-content: center; margin-top: 80px;">
+      <table style="width: 95%; max-width: 1400px; border-collapse: collapse; font-size: 0.8em;">
+        <thead>
+          <tr>
+            <th style="border-bottom: 2px solid #333; padding: 8px; text-align: left;">Aspect</th>
+            <th style="border-bottom: 2px solid #333; padding: 8px; text-align: left;">Open-Source</th>
+            <th style="border-bottom: 2px solid #333; padding: 8px; text-align: left;">Paid LLMs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 8px; border-top: 1px solid #ccc;">🔐 Data Privacy & Security</td>
+            <td style="padding: 8px; border-top: 1px solid #ccc;">Full local control; ideal for compliance</td>
+            <td style="padding: 8px; border-top: 1px solid #ccc;">External processing; potential privacy risks</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-top: 1px solid #ccc;">⚙️ Customization</td>
+            <td style="padding: 8px; border-top: 1px solid #ccc;">Full access to weights & code; deep fine-tuning</td>
+            <td style="padding: 8px; border-top: 1px solid #ccc;">API-driven only; limited to prompt-level tuning</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border-top: 1px solid #ccc;">💰 Cost</td>
+            <td style="padding: 8px; border-top: 1px solid #ccc;">No license fees; infra & expertise costs apply</td>
+            <td style="padding: 8px; border-top: 1px solid #ccc;">Low setup; per-token/subscription fees at scale</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="font-size: 0.5em; margin-top: 64px; margin-bottom: 8px;">
+      *Large models require high-end enterprise GPUs (≥80 GB VRAM) and large system memory (≥64 GB RAM), making them impractical to run on typical local machines.<br>
+    </div>
+    ---
+    # Quantized Models: Your Local-Friendly Solution 🚀
+
+    ## What Is Quantization?
+    - **Definition**: Compression that reduces model precision from high-precision formats (like FP32/FP16) to lower-precision integers (INT8, INT4, INT2, etc.) — shrinking size and boosting speed.
+    
+    - **Why it matters**:
+      - Cuts model size by up to ~75–90%
+      - Enables faster inference and lower energy usage
+      - Makes deployment feasible on consumer CPUs/GPUs 
+
+    ---
+
+    #Practical Quantized Models for Local Use
+
+    <div style="display: flex; justify-content: center; margin-top: 40px;">
+      <table style="width: 95%; max-width: 1200px; border-collapse: collapse; font-size: 0.9em;">
+        <thead>
+          <tr>
+            <th style="border-bottom: 2px solid #333; padding: 8px; text-align: left;">Model</th>
+            <th style="border-bottom: 2px solid #333; padding: 8px; text-align: left;">Params</th>
+            <th style="border-bottom: 2px solid #333; padding: 8px; text-align: left;">Quantized Size</th>
+            <th style="border-bottom: 2px solid #333; padding: 8px; text-align: left;">RAM ≥</th>
+            <th style="border-bottom: 2px solid #333; padding: 8px; text-align: left;">VRAM ≥</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">Gemma 3 (4B)</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">4 B</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">~3-4 GB</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">16 GB</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">~6 GB</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">Mistral 7B</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">7 B</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">~4 GB</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">16 GB</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">~6 GB</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">Llama 3.1 (8B)</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">8 B</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">~5 GB</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">16 GB</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">~8 GB</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">DeepSeek‑R1 (1.5B)</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">1.5 B</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">~1 GB</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">12 GB</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">~4 GB</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">DeepSeek‑R1 (7B)</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">7 B</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">~4-5 GB</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">16 GB</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">~4–6 GB</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">Gemma 3n (E2B)</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">∼5 B raw → 2 B eff.</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">~5 GB</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">2 GB</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">~2 GB</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">Gemma 3n (E4B)</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">∼8 B raw → 4 B eff.</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">~8 GB</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">3 GB</td>
+            <td style="padding: 6px; border-top: 1px solid #ccc;">~3 GB</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    *Note: VRAM includes ~20% overhead for context, activations & KV cache.*
+
+    ---
+    # LLMs in Python
+
+    <div style="display: flex; justify-content:space-evenly; align-items: flex-start; gap: 64px; margin-top: 30px; margin-bottom: 0; width: 92vw; max-width: none; margin-rgiht: 12vw;">
+      <div style="flex: 1; min-width: 320px; text-align: center;">
+        <img src="./pictures/langchain.png" alt="LangChain" style="height: 54px; width: auto; margin-bottom: 12px;">
+        <div style="font-size: 0.8em; margin-bottom: 15px;"><a href = "https://www.langchain.com">A Python framework for composing LLM</a> calls into modular “chains” and autonomous agents.</div>
+        <ul style="text-align: left; margin: 0 0 0 18px; font-size: 0.92em;">
+          <li>Connects prompts, logic, and data sources</li>
+          <li>Ships with ready-made building blocks (LLMs, retrievers, memory, agents)</li>
+        </ul>
+      </div>
+      <div style="flex: 1; min-width: 320px; text-align: center;">
+        <img src="./pictures/langgraph.png" alt="LangGraph" style="height: 54px; width: auto; margin-bottom: 12px;">
+        <div style="font-size: 0.8em; margin-bottom: 45px;"><a href = "https://www.langchain.com/langgraph">A graph-based toolkit</a> to visualize, debug, and optimize your LLM workflows.</div>
+        <ul style="text-align: left; margin: 0 0 0 18px; font-size: 0.92em;">
+          <li>Represents chains and tool calls as nodes & edges</li>
+          <li>Lets you inspect intermediate steps, data flows, and dependencies</li>
+          <li>Integrates with LangChain under the hood</li>
+        </ul>
+      </div>
+      <div style="flex: 1; min-width: 320px; text-align: center;">
+        <img src="./pictures/langsmith.png" alt="LangSmith" style="height: 54px; width: auto; margin-bottom: 12px;">
+        <div style="font-size: 0.8em; margin-bottom: 45px;"><a href = "https://www.langchain.com/langsmith">An observability & debugging platform</a> for LangChain applications.</div>
+        <ul style="text-align: left; margin: 0 0 0 18px; font-size: 0.92em;">
+          <li>Traces every prompt, call, and token</li>
+          <li style="margin-bottom: 45px;">Visualizes execution graphs and timings</li>
+          <li>Helps you iterate faster by surfacing errors and performance bottlenecks</li>
+        </ul>
+      </div>
+    </div>
+    
+    ---
+
+    # Integrating tools and agents
+    <div style="display: flex; flex-direction: row; align-items: flex-start; gap: 36px; margin-top: 40px;">
+      <div style="flex-shrink: 0;">
+        <img src="./pictures/tools.webp" alt="Tools and Agents" style="height: 400px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.3);">
+      </div>
+      <div style="flex: 1; min-width: 400px; font-size: 1em;">
+        <ul style="margin-top: 60px;">
+          <li style="margin-bottom: 36px;">Enhance LLM with external capabilities.</li>
+          <li style="margin-bottom: 36px;">Incorporate JSON, XML, or function calls.</li>
+          <li style="margin-bottom: 36px;">Improve searching or database queries.</li>
+          <li style="margin-bottom: 0;">Simplify structured data extraction.</li>
+        </ul>
+      </div>
+    </div>
+    ---
+    # Agents
+    <div style="display: flex; flex-direction: row; align-items: flex-start; gap: 36px; margin-top: 40px;">
+      <div style="flex-shrink: 0;">
+        <img src="./pictures/agents.png" alt="Agents" style="height: 450px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.3);">
+      </div>
+      <div style="flex: 1; min-width: 400px; font-size: 1em;">
+        <ul style="margin-top: 60px;">
+          <li style="margin-bottom: 36px;">Allow flexible, iterative tool usage.</li>
+          <li style="margin-bottom: 36px;">Model decides tools on the fly.</li>
+          <li style="margin-bottom: 36px;">Supports looping for complex tasks.</li>
+          <li style="margin-bottom: 0;">Confidently handles multiple steps dynamically.</li>
+        </ul>
+      </div>
+    </div>
+    ---
+    # 🔧 The `python_repl` Tool
+    <div style="display: flex; flex-direction: row; align-items: flex-start; gap: 40px; margin-top: 30px;">
+      <div style="flex: 1; min-width: 320px; font-size: 0.95em;">
+        <div style="font-size: 1.1em; font-weight: bold; margin-bottom: 10px;">What is it?</div>
+        <div style="margin-bottom: 14px;">
+          An embedded Python interpreter the LLM can call at runtime to:
+        </div>
+        <ul style="margin-bottom: 18px;">
+          <li style="margin-bottom: 36px;">Run arbitrary code</li>
+          <li style="margin-bottom: 36px;">Inspect & transform data</li>
+          <li>Return results back into the agent pipeline</li>
+        </ul>
+      </div>
+      <div style="flex: 1.2; min-width: 320px;">
+        <div style="font-size: 1.1em; font-weight: bold; margin-bottom: 10px;">How the LLM invokes i:</div>
+        <pre style="background: #222; color: #fff; font-size: 0.95em; padding: 10px; border-radius: 8px; overflow-x: auto; max-width: 100%; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">
+          JSON tool call example
+          <code>
+                {
+                "tool_name": "python_repl",
+                "tool_args": {"code": "import math
+                                       result = math.sqrt(42)
+                                       print('√42 =', result)"}
+                }
+              </code>
+        </pre>
+      </div>
+    </div>
+
+
+    ---
+    # Methods of  Quantification
+
+    ---
+    #:x passive
+    Meaning, mixing does not change how the ocean adjusts to changes in climatic forcing. 
+    Diffusive coefficients in models are prescribed and not dynamically adjusted. But recent findings indicate otherwise. Many fast interactions between mixing processes and large scale behavior were found ([Meredith2022, Chapter 1 and references therein](https://doi.org/10.1016/C2019-0-03674-6))
+
+    #:x artemics
+    Development of a parameterization of internal waves in the Arctic Ocean and use in climate models to research links and feedback mechanisms between declining sea ice, wave-induced mixing, stratification and heat transport. 
+
+    # What are current research questions?
+
+    - Ocean mixing is almost always described as [:dynamically passive.](#passive)
+
+    - At AWI: new [:Emmy Noether group Artemics](#artemics) in Climate Dynamics by Friederike Pollmann
+
+    ---
+
+    # test slide title
+
+    hello?
+
+    #:x hidden
+    hidden more info 
+
+    #:x hidden but multiple words
+    hidden longer text
+
+    # header 3
+    visible cross reference to more info 
+
+    > Any text that [:looks like this, can be expanded ...](#hidden) <!-- or [:maybe like this](#header 3)  -->
+
+    Or [:more like this?](#hiddenbutmultiplewords)
+
+    ---
+
+    # MathJax test
+
+    This should be  $\\sqrt{a^2 + b^2}$ \\(\sqrt{a^2 + b^2} )// \(\sqrt{a^2 + b^2}\)rendered by: 
+    ```
+    $\pm\sqrt{a^2 + b^2}$
+    ```
+    This is subsequent text and a test of autorender.
+    The expected value or ensemble mean of $z(t)$ is
+    $$\eta(t)\equiv\mathrm{E}z(t)$$
+
+
+    $$\text{\small test} \quad \text{\huge test}$$
+
+    ---
+
+    # Wikipedia Nutshell test 
+
+    [:looks like this, can be expanded ...](https://en.wikipedia.org/wiki/Turbulence)
+
+
+    ---
+
+    #:x footnote
+    A fantastic short and easy to follow step-by-step guide on how to set up scientific python code with version control 
+    is given in the [Good Research Code Handbook](https://goodresearch.dev/) by Patrick J Mineault. 
+
+    Also, AWI has its own [GitLab server](https://gitlab.awi.de).
+
+    #:x git
+    The article [What Is Version Control](https://www.earthdatascience.org/courses/intro-to-earth-data-science/git-github/version-control/) 
+    gives an overview of the broad concepts and the differences between git and github. And most importantly, how you yourself can use it. 
+
+
+    # Version Control
+
+    If you code (or maybe just only write), you should use a version controlled back-up
+    - [:git](#git) is the most popular way to do it
+    - Online storage: [:Github, Gitlab, etc](#footnote) 
+
+    ---
+
+    #:x WikiInfo
+    I think post-its and notebooks are self-explanatory, but "wiki" may need an explanation. 
+    I set up an [online wiki](https://ocean.miraheze.org/), which is hosted by Miraheze for free. 
+    It can be set to be private, or public and be accessible for everyone. 
+    The underlying structure and syntax is the same as Wikipedia. 
+
+    Outside paid note-taking programs, another good possibility is [Obsidian](https://obsidian.md/). 
+    Although very customizable, it is quite easy to start simple local notes that link to each other. 
+    The result can still be shared via Github. 
+
+    # How do I take notes? 
+    [:Extend for more detail on Wikis.](#WikiInfo)
+
+    ---
+    
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">  </script>
+    <script>
+      var slideshow = remark.create({
+        navigation: {scroll: true}
+      });
+    </script>
+  </body>
+</html>
