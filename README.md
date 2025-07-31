@@ -1,6 +1,6 @@
 #  Building Intelligent LLM Workflows
 
-Originally created for **2025 Openscapes HackHours** (NOAA & NASA)
+Originally created for **2025 Openscapes HackHours**
 
 Boris Shapkin  
 ---
