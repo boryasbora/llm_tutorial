@@ -2,6 +2,8 @@
 
 Originally created for **2025 Openscapes HackHours**
 
+You can check the presentation here: [LLM Tutorial Presentation](https://boryasbora.github.io/llm_tutorial/#1)
+
 Boris Shapkin  
 ---
 
