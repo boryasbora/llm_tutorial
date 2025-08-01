@@ -287,31 +287,57 @@ Work in progress for a talk for the AWI study circle of climate dynamics
 
     *Note: VRAM includes ~20% overhead for context, activations & KV cache.* <br>
     Find open-source LLMs at <a href="https://ollama.com/search" target="_blank">Ollama</a>.
-
     ---
     # LLMs in Python
+    
+    <div style="display: flex; justify-content: space-evenly; align-items: flex-start; gap: 32px; margin-top: 30px; width: 92vw;">
 
-    <div style="display: flex; justify-content:space-evenly; align-items: flex-start; gap: 64px; margin-top: 30px; margin-bottom: 0; width: 92vw; max-width: none; margin-rgiht: 12vw;">
+      <!-- LangChain -->
       <div style="flex: 1; min-width: 320px; text-align: center;">
         <img src="./pictures/langchain.png" alt="LangChain" style="height: 54px; width: auto; margin-bottom: 12px;">
-        <div style="font-size: 0.8em; margin-bottom: 15px;"><a href = "https://www.langchain.com">A Python framework for composing LLM</a> calls into modular “chains” and autonomous agents.</div>
+        <div style="font-size: 0.8em; margin-bottom: 15px;">
+          <a href="https://www.langchain.com">A Python framework for composing LLM calls into modular “chains” and autonomous agents.</a>
+        </div>
         <ul style="text-align: left; margin: 0 0 0 18px; font-size: 0.92em;">
           <li>Connects prompts, logic, and data sources</li>
           <li>Ships with ready-made building blocks (LLMs, retrievers, memory, agents)</li>
         </ul>
       </div>
+    
+      <!-- Custom image -->
+      <div style="flex: 1; min-width: 320px; text-align: center;">
+        <!-- Replace the src value with your image path -->
+        <img 
+          src="./pictures/langchain_provides.png" 
+          alt="Custom Slide Image" 
+          style="width: 105%; height: auto; margin-top: 12px; max-width: none;"
+        >
+      </div>
+    
+    </div>
+    ---
+    # LLMs in Python
+
+    <div style="display: flex; justify-content: space-evenly; align-items: flex-start; gap: 64px; margin-top: 30px; width: 92vw; max-width: none;">
+      <!-- LangGraph (repeated for context) -->
       <div style="flex: 1; min-width: 320px; text-align: center;">
         <img src="./pictures/langgraph.png" alt="LangGraph" style="height: 54px; width: auto; margin-bottom: 12px;">
-        <div style="font-size: 0.8em; margin-bottom: 45px;"><a href = "https://www.langchain.com/langgraph">A graph-based toolkit</a> to visualize, debug, and optimize your LLM workflows.</div>
+        <div style="font-size: 0.8em; margin-bottom: 45px;">
+          <a href="https://www.langchain.com/langgraph">A graph-based toolkit to visualize, debug, and optimize your LLM workflows.</a>
+        </div>
         <ul style="text-align: left; margin: 0 0 0 18px; font-size: 0.92em;">
-          <li>Represents chains and tool calls as nodes & edges</li>
+          <li>Represents chains and tool calls as nodes &amp; edges</li>
           <li>Lets you inspect intermediate steps, data flows, and dependencies</li>
           <li>Integrates with LangChain under the hood</li>
         </ul>
       </div>
+
+      <!-- LangSmith -->
       <div style="flex: 1; min-width: 320px; text-align: center;">
         <img src="./pictures/langsmith.png" alt="LangSmith" style="height: 54px; width: auto; margin-bottom: 12px;">
-        <div style="font-size: 0.8em; margin-bottom: 45px;"><a href = "https://www.langchain.com/langsmith">An observability & debugging platform</a> for LangChain applications.</div>
+        <div style="font-size: 0.8em; margin-bottom: 45px;">
+          <a href="https://www.langchain.com/langsmith">An observability & debugging platform for LangChain applications.</a>
+        </div>
         <ul style="text-align: left; margin: 0 0 0 18px; font-size: 0.92em;">
           <li>Traces every prompt, call, and token</li>
           <li style="margin-bottom: 45px;">Visualizes execution graphs and timings</li>
@@ -319,7 +345,7 @@ Work in progress for a talk for the AWI study circle of climate dynamics
         </ul>
       </div>
     </div>
-    
+
     ---
 
     # Integrating tools and agents
